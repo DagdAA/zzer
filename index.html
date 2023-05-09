@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Subir archivo a GitHub</title>
+	<style>
+		form {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			margin-top: 50px;
+		}
+
+		label {
+			font-size: 18px;
+			margin-bottom: 10px;
+		}
+
+		input[type="file"] {
+			margin-bottom: 20px;
+		}
+
+		button[type="submit"] {
+			background-color: #4CAF50;
+			color: white;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+		}
+
+		button[type="submit"]:hover {
+			background-color: #3e8e41;
+		}
+	</style>
+</head>
+<body>
+	<h1>Subir archivo a GitHub</h1>
+	<form>
+		<label for="fileInput">Seleccionar archivo:</label>
+		<input type="file" id="fileInput">
+		<button type="submit" id="uploadButton">Subir archivo</button>
+	</form>
+	<script>
+		const owner = 'DagdAA';
+		const repo = 'zzer';
+		const path = 'temporal/';
+		const token = 'token-de-autenticacion';
+
+		const fileInput = document.querySelector('input[type="file"]');
+		const uploadButton = document.querySelector('button[type="submit"]');
+
+		uploadButton.addEventListener('click', () => {
+			const file = fileInput.files[0];
+			const formData = new FormData();
+			formData.append('file', file, file.name);
+
+			fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}${file.name}`, {
+				method: 'PUT',
+				headers: {
+					'Authorization': `token ${token}`
+				},
+				body: formData
+			})
+			.then(response => {
+				if (response.ok) {
+					console.log('Archivo subido con éxito');
+				} else {
+					console.error('Error al subir el archivo');
+				}
+			})
+			.catch(error => {
+				console.error('Error al subir el archivo', error);
+			});
+		});
+	</script>
+</body>
+</html>
